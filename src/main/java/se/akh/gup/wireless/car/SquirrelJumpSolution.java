@@ -11,11 +11,10 @@ public class SquirrelJumpSolution {
 
     private APICaller api;
 
-    ArrayList<ArrayList<Integer>> possiblePositionsList = new ArrayList<>();
-    HashMap<Integer, Integer> maxJumpsAtEachLocationMap = new HashMap<>();
+    HashMap<Integer, Integer> maxJumpsAtPositionMap = new HashMap<>();
 
-    ArrayList<Integer> stepSeries = new ArrayList<>();
-    HashMap<Integer, Integer> nextBestPositionAtCurrentPositionMap = new HashMap<>();
+    ArrayList<Integer> squirrelStepsSequence = new ArrayList<>();
+    HashMap<Integer, Integer> nextBestPositionFromCurrentPositionMap = new HashMap<>();
 
 
     public SquirrelJumpSolution(APICaller api) {
@@ -23,10 +22,6 @@ public class SquirrelJumpSolution {
         this.api = api;
 
         // You can initiate and calculate things here
-        for (int i=0; i<api.getNumberOfBars(); i++){
-            possiblePositionsList.add(nextPossibleSteps(i));
-        }
-
         for (int i=0; i<api.getNumberOfBars(); i++) {
             calcMaxJumpsAtPosition(i);
         }
@@ -78,16 +73,16 @@ public class SquirrelJumpSolution {
         int nextBestPosition = -1;
 
         // If already calculated, no need to re-calculate the values
-        if (maxJumpsAtEachLocationMap.containsKey(position)){
-            return maxJumpsAtEachLocationMap.get(position);
+        if (maxJumpsAtPositionMap.containsKey(position)){
+            return maxJumpsAtPositionMap.get(position);
         }
 
         // Fetch all possible positions, if Empty return 0;
-        ArrayList<Integer> nextPosition = possiblePositionsList.get(position);
+        ArrayList<Integer> nextPosition = nextPossibleSteps(position);
         if (nextPosition.isEmpty()){
 
-            maxJumpsAtEachLocationMap.put(position, jumps);
-            nextBestPositionAtCurrentPositionMap.put(position, nextBestPosition);
+            maxJumpsAtPositionMap.put(position, jumps);
+            nextBestPositionFromCurrentPositionMap.put(position, nextBestPosition);
 
             return jumps;
         }
@@ -106,8 +101,8 @@ public class SquirrelJumpSolution {
         }
 
         // Update maximum jumps possible at the current position so that duplicate calculations can be avoided.
-        maxJumpsAtEachLocationMap.put(position, maxJumps);
-        nextBestPositionAtCurrentPositionMap.put(position, nextBestPosition);
+        maxJumpsAtPositionMap.put(position, maxJumps);
+        nextBestPositionFromCurrentPositionMap.put(position, nextBestPosition);
 
         return maxJumps;
     }
@@ -120,7 +115,7 @@ public class SquirrelJumpSolution {
     private int calcMaxJumps(){
 
         int maxJumps = Integer.MIN_VALUE;
-        for (Map.Entry<Integer, Integer> entry: maxJumpsAtEachLocationMap.entrySet()){
+        for (Map.Entry<Integer, Integer> entry: maxJumpsAtPositionMap.entrySet()){
 
             if (maxJumps < entry.getValue()){
                 maxJumps = entry.getValue();
@@ -139,7 +134,7 @@ public class SquirrelJumpSolution {
 
         int initialPosition = -1;
 
-        for (Map.Entry<Integer, Integer> entry: maxJumpsAtEachLocationMap.entrySet()){
+        for (Map.Entry<Integer, Integer> entry: maxJumpsAtPositionMap.entrySet()){
 
             if (entry.getValue() == MAX_JUMPS){
                 initialPosition = entry.getKey();
@@ -159,8 +154,8 @@ public class SquirrelJumpSolution {
 
         while(nextPos != -1){
 
-            stepSeries.add(nextPos);
-            nextPos = nextBestPositionAtCurrentPositionMap.get(nextPos);
+            squirrelStepsSequence.add(nextPos);
+            nextPos = nextBestPositionFromCurrentPositionMap.get(nextPos);
         }
     }
 
@@ -182,6 +177,6 @@ public class SquirrelJumpSolution {
      */
     public int positionAtStep(int step) {
         // Write your code here
-        return stepSeries.get(step);
+        return squirrelStepsSequence.get(step);
     }
 }
