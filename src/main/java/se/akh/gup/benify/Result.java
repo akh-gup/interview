@@ -7,8 +7,10 @@ import se.akh.gup.benify.entity.ProductBrandOrders;
 import se.akh.gup.benify.mapper.OrderMapper;
 import se.akh.gup.benify.utils.ReadFile;
 import se.akh.gup.benify.utils.WriteFile;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Result {
 
@@ -37,10 +39,46 @@ public class Result {
 
         // Calculate average quantity of products ordered.
         HashMap<String, Double> productAvgSize = new AverageProductQuantity().calcAvgProductQty(orders);
-        WriteFile.writeAverageProductQuantity(averageProductQtyFileName, productAvgSize);
+        writeAverageProductQuantity(averageProductQtyFileName, productAvgSize);
 
         // Calculate Popular Brand for each product based on number of orders.
         List<ProductBrandOrders> highestOrderedBrand = new PopularProductBrand().fetchPopularProductBrands(orders);
-        WriteFile.writePopularBrand(popularProductBrandFileName, highestOrderedBrand);
+        writePopularBrand(popularProductBrandFileName, highestOrderedBrand);
+    }
+
+    /***
+     *
+     * Writes average product quantity to file
+     *
+     * @param fileName           Output File Name
+     * @param avgProductQtyMap   Product Average quantity map
+     *
+     */
+    private static void writeAverageProductQuantity(String fileName, HashMap<String, Double> avgProductQtyMap){
+
+        List<String> recordList = new ArrayList<>();
+
+        for (Map.Entry<String, Double> productAvgQty: avgProductQtyMap.entrySet()){
+            recordList.add(productAvgQty.getKey() + ',' + productAvgQty.getValue());
+        }
+
+        WriteFile.writeLinesToCSV(fileName, recordList);
+    }
+
+
+    /***
+     *
+     * Writes popular brand list to file
+     *
+     */
+    private static void writePopularBrand(String fileName, List<ProductBrandOrders> productBrandOrders){
+
+        List<String> recordList = new ArrayList<>();
+
+        for (ProductBrandOrders brandOrder: productBrandOrders){
+            recordList.add(brandOrder.getProductName() + ',' + brandOrder.getBrandName());
+        }
+
+        WriteFile.writeLinesToCSV(fileName, recordList);
     }
 }

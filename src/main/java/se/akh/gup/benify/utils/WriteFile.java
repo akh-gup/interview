@@ -1,13 +1,9 @@
 package se.akh.gup.benify.utils;
 
-import se.akh.gup.benify.entity.ProductBrandOrders;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class WriteFile {
 
@@ -19,7 +15,7 @@ public class WriteFile {
      * @param recordsList       List of records to be saved in file
      */
 
-    private static void writeLinesToCSV(String fileName, List<String> recordsList){
+    public static void writeLinesToCSV(String fileName, List<String> recordsList){
         if (fileName.endsWith(".csv")){
 
             FileWriter fileWriter = null;
@@ -51,37 +47,5 @@ public class WriteFile {
         } else {
             System.err.println("Invalid File Type.");
         }
-    }
-    /***
-     * Writes popular brand list to file
-     *
-     */
-    public static void writePopularBrand(String fileName, List<ProductBrandOrders> productBrandOrders){
-
-        List<String> recordList = new ArrayList<>();
-
-        for (ProductBrandOrders brandOrder: productBrandOrders){
-
-            recordList.add(brandOrder.getProductName() + ',' + brandOrder.getBrandName());
-        }
-        writeLinesToCSV(fileName, recordList);
-    }
-
-
-    /***
-     * Writes average product quantity to file
-     * @param fileName           Output File Name
-     * @param avgProductQtyMap   Product Average quantity map
-     */
-
-    public static void writeAverageProductQuantity(String fileName, HashMap<String, Double> avgProductQtyMap){
-
-        List<String> recordList = new ArrayList<>();
-
-        for (Map.Entry<String, Double> productAvgQty: avgProductQtyMap.entrySet()){
-
-            recordList.add(productAvgQty.getKey() + ',' + productAvgQty.getValue());
-        }
-        writeLinesToCSV(fileName, recordList);
     }
 }
