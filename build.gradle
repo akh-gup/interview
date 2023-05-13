@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.amazonaws:aws-java-sdk-core:1.12.106'
+    implementation 'com.amazonaws:aws-java-sdk-iam:1.12.106'
+    implementation 'com.amazonaws:aws-java-sdk-ec2:1.12.190'
+    implementation 'org.apache.poi:poi-ooxml:4.1.2'
+//    compile(group: 'com.aspose', name: 'aspose-words', version: '23.4', classifier: 'jdk17')
+
+    implementation 'org.apache.pdfbox:pdfbox:2.0.24'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+//    implementation 'org.springframework.boot:spring-boot-starter-web'
+}
+
+test {
+    useJUnitPlatform()
+}
