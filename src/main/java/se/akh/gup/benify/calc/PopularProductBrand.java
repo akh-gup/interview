@@ -3,7 +3,9 @@ package se.akh.gup.benify.calc;
 import se.akh.gup.benify.entity.Order;
 import se.akh.gup.benify.entity.ProductBrandOrders;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class PopularProductBrand {
 
@@ -13,6 +15,20 @@ public class PopularProductBrand {
      */
     public List<ProductBrandOrders> fetchPopularProductBrands(List<Order> orders){
 
+
+        // Approach #01
+        HashMap<String, HashMap<String, Integer>> productBrandMap = new HashMap<>();
+        for(Order order: orders){
+            populateAllProductOrders(order, productBrandMap);
+        }
+
+        HashMap<String, String> result = new HashMap<>();
+        for (Map.Entry<String, HashMap<String,Integer>> productEntry: productBrandMap.entrySet()){
+            result.put(productEntry.getKey(), fetchPopularBrandForProduct(productEntry.getValue()));
+        }
+
+
+        // Approach #2
         List<ProductBrandOrders> popularBrandOrderList = new ArrayList<>();
         List<ProductBrandOrders> popularBrandList = new ArrayList<>();
 
@@ -27,7 +43,60 @@ public class PopularProductBrand {
 
             updatePopularBrandForOrder(pB, popularBrandList);
         }
+        System.out.println(popularBrandList);
         return popularBrandList;
+    }
+
+
+    /****
+     *
+     *
+     *
+     *
+     */
+    private void populateAllProductOrders(Order order, HashMap<String, HashMap<String, Integer>> productBrandMap){
+
+        HashMap<String, Integer> brandOrderMap = new HashMap<>();
+        boolean brandOrderExists = false;
+
+        if (productBrandMap.get(order.getProductName()) != null){
+
+            brandOrderMap = productBrandMap.get(order.getProductName());
+
+            for (Map.Entry<String, Integer> entry: brandOrderMap.entrySet()){
+
+                if (entry.getKey().equals(order.getProductBrand())){
+
+                    brandOrderMap.put(order.getProductBrand(), entry.getValue() + 1);
+                    brandOrderExists = true;
+                    break;
+                }
+            }
+        }
+
+        if (!brandOrderExists){
+            brandOrderMap.put(order.getProductBrand(), 1);
+        }
+        productBrandMap.put(order.getProductName(), brandOrderMap);
+    }
+
+
+    /***
+     *
+     *
+     */
+    private String fetchPopularBrandForProduct(HashMap<String, Integer> brandOrderMap){
+        int maxVal = Integer.MIN_VALUE;
+        String popularBrand = "";
+
+        for(Map.Entry<String, Integer> brandEntry: brandOrderMap.entrySet()){
+
+            if (maxVal < brandEntry.getValue()) {
+                maxVal = brandEntry.getValue();
+                popularBrand = brandEntry.getKey();
+            }
+        }
+        return popularBrand;
     }
 
 

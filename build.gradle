@@ -14,11 +14,18 @@ dependencies {
     implementation 'com.amazonaws:aws-java-sdk-iam:1.12.106'
     implementation 'com.amazonaws:aws-java-sdk-ec2:1.12.190'
     implementation 'org.apache.poi:poi-ooxml:4.1.2'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.4.2'
+    implementation('org.projectlombok:lombok')
+    implementation group: 'com.sun.net.httpserver', name: 'http', version: '20070405'
 //    compile(group: 'com.aspose', name: 'aspose-words', version: '23.4', classifier: 'jdk17')
 
     implementation 'org.apache.pdfbox:pdfbox:2.0.24'
+    implementation 'org.projectlombok:lombok:1.18.20'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    testImplementation('org.powermock:powermock-module-junit4:1.7.3')
+    testImplementation('org.powermock:powermock-api-mockito2:1.7.3')
+
 //    implementation 'org.springframework.boot:spring-boot-starter-web'
 }
 

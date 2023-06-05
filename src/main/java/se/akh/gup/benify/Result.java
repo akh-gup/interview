@@ -37,14 +37,29 @@ public class Result {
             return;
         }
 
+        try{
+            Result result = new Result();
+
+            result.avgQuantity(averageProductQtyFileName, orders);
+            result.popularBrand(popularProductBrandFileName, orders);
+
+        } catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    /***
+     * Calculates average quantity and writes to CSV file
+     * @param outputFileName        Output file name.
+     * @param orders                List of orders placed by customer.
+     */
+    private void avgQuantity(String outputFileName, List<Order> orders){
+
         // Calculate average quantity of products ordered.
         HashMap<String, Double> productAvgSize = new AverageProductQuantity().calcAvgProductQty(orders);
-        writeAverageProductQuantity(averageProductQtyFileName, productAvgSize);
-
-        // Calculate Popular Brand for each product based on number of orders.
-        List<ProductBrandOrders> highestOrderedBrand = new PopularProductBrand().fetchPopularProductBrands(orders);
-        writePopularBrand(popularProductBrandFileName, highestOrderedBrand);
+        writeAverageProductQuantity(outputFileName, productAvgSize);
     }
+
 
     /***
      *
@@ -54,7 +69,7 @@ public class Result {
      * @param avgProductQtyMap   Product Average quantity map
      *
      */
-    private static void writeAverageProductQuantity(String fileName, HashMap<String, Double> avgProductQtyMap){
+    private void writeAverageProductQuantity(String fileName, HashMap<String, Double> avgProductQtyMap){
 
         List<String> recordList = new ArrayList<>();
 
@@ -68,10 +83,23 @@ public class Result {
 
     /***
      *
+     * @param outputFileName        Output file name.
+     * @param orders                List of orders placed by customer.
+     */
+    private void popularBrand(String outputFileName, List<Order> orders){
+
+        // Calculate average quantity of products ordered.
+        List<ProductBrandOrders> highestOrderedBrand = new PopularProductBrand().fetchPopularProductBrands(orders);
+        writePopularBrand(outputFileName, highestOrderedBrand);
+    }
+
+
+    /***
+     *
      * Writes popular brand list to file
      *
      */
-    private static void writePopularBrand(String fileName, List<ProductBrandOrders> productBrandOrders){
+    private void writePopularBrand(String fileName, List<ProductBrandOrders> productBrandOrders){
 
         List<String> recordList = new ArrayList<>();
 
